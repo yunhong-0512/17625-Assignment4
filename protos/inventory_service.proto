@@ -1,0 +1,47 @@
+syntax = "proto2";
+
+package inventory;
+
+message Book {
+    required string isbn = 1;
+    required string title = 2;
+    required string author = 3;
+    required string genre = 4;
+    required int32 publishing_year = 5;
+}
+
+enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_SUCCESS = 1; // mean available in item
+    STATUS_FAILED = 2; // mean taken in item
+}
+
+message InventoryItem {
+    required int32 inventory_number = 1;
+    oneof item {
+        Book book = 2;
+    }
+    required Status status = 3;
+}
+
+message CreateBookResponse {
+    required Status status = 1;
+}
+
+message CreateBookRequest {
+    required Book book = 1;
+}
+
+message GetBookRequest {
+    required string isbn = 1;
+}
+
+message GetBookResponse {
+    required Status status = 1;
+    optional InventoryItem item = 2;
+}
+
+service InventoryService {
+    rpc CreateBook (CreateBookRequest) returns (CreateBookResponse);
+    rpc GetBook (GetBookRequest) returns (GetBookResponse);
+}
